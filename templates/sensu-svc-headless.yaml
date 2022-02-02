@@ -1,0 +1,14 @@
+---
+# headless service for sensu-backend statefulset DNS
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sensu.fullname" . }}-sensu-headless
+  labels:
+    {{- include "sensu.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "sensu.selectorLabels" . | nindent 4 }}
+    app: sensu
+  clusterIP: None
+  ports: []

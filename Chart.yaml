@@ -1,0 +1,6 @@
+apiVersion: v2
+name: sensu
+description: A Helm chart for Sensu Go
+type: application
+version: 1.0.0
+appVersion: "6.6.4"

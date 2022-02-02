@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sensu.fullname" . }}-gateway-cm
+  labels:
+    {{- include "sensu.labels" . | nindent 4 }}
+data:
+  nginx.conf: |
+    events {
+        worker_connections  1024;
+    }
+
+    http {
+        server {
+            root /usr/share/nginx/html;
+
+            location / {
+                autoindex   on;
+                sendfile    on;
+                sendfile_max_chunk  1m;
+            }
+
+            location /assets/ {
+                autoindex   on;
+                sendfile    on;
+                sendfile_max_chunk  1m;
+            }
+        }
+    }

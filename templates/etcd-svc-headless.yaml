@@ -1,0 +1,20 @@
+---
+# headless service for sensu-etcd statefulset DNS
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sensu.fullname" . }}-etcd-headless
+  labels:
+    {{- include "sensu.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "sensu.selectorLabels" . | nindent 4 }}
+    app: sensu-etcd
+  clusterIP: None
+  ports:
+  - name: sensu-etcd-client
+    protocol: TCP
+    port: 2379
+  - name: sensu-etcd-server
+    protocol: TCP
+    port: 2380

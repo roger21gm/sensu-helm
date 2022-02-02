@@ -1,0 +1,40 @@
+---
+# sensu-backend cluster initialization
+#
+# NOTE: the first few init jobs should fail (during cluster initialization), but
+# one will eventually succeed. A future improvement to the `sensu-backend init`
+# command will improve the reliability of cluster initialization such that K8s
+# Job-based initialization will become more reliable and idempotent. In the interim,
+# an alternative/workaround solution is also provided as a commented set of commands.
+# To use this alternative initialization workflow, comment out or delete the
+# `sensu-backend init` command(s) and uncomment the sleep-based command(s).
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "sensu.fullname" . }}-backend-init
+  labels:
+    {{- include "sensu.labels" . | nindent 4 }}
+spec:
+  parallelism: 1
+  completions: 1
+  backoffLimit: 5
+  template:
+    spec:
+      activeDeadlineSeconds: 60
+      containers:
+      - name: sensu-backend-init
+        image: sensu/sensu:6.6.4
+        command: [
+          "/opt/sensu/bin/sensu-backend", "init",
+          "--etcd-client-urls", "http://$(ETCD_SVC):2379",
+        ]
+        env:
+        - name: ETCD_SVC
+          value: {{ include "sensu.fullname" . }}-etcd-headless
+        - name: SENSU_BACKEND_CLUSTER_ADMIN_USERNAME
+          value: sensu
+        - name: SENSU_BACKEND_CLUSTER_ADMIN_PASSWORD
+          value: sensu
+        volumeMounts: []
+        ports: []
+      restartPolicy: Never

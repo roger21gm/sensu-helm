@@ -36,9 +36,22 @@ ui:
   image:
     repository: roger21gm/sensu-go-ui
     tag: latest
-    
+
 service:
   type: NodePort
   nodePort: 30333
+
+etcd:
+  global:
+    storageClass: default
+  persistence:
+    size: 8Gi
+  autoCompactionMode: "revision"
+  autoCompactionRetention: 2
+  auth:
+    rbac:
+      create: false
+    
+
 
 

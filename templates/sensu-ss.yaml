@@ -11,7 +11,7 @@ spec:
     matchLabels: {{- include "sensu.selectorLabels" . | nindent 6 }}
       app: sensu
   serviceName: sensu
-  replicas: 3
+  replicas: {{ .Values.replicaCount }}
   updateStrategy:
     type: RollingUpdate
   template:
@@ -19,6 +19,10 @@ spec:
       labels: {{- include "sensu.selectorLabels" . | nindent 8 }}
         app: sensu
     spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
       volumes:
       - name: sensu-asset-server-ca-cert
         secret:
@@ -40,7 +44,7 @@ spec:
         volumeMounts: []
       containers:
       - name: sensu-backend
-        image: sensu/sensu:6.6.4
+        image: "{{ .Values.sensu.image.repository }}:{{ .Values.sensu.image.tag }}"
         command: [
           "/opt/sensu/bin/sensu-backend", "start",
           "--log-level", "debug",

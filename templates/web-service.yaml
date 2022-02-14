@@ -1,0 +1,21 @@
+---
+# load balancer for cluster-external access to sensu-backends (web + API + transport)
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sensu.fullname" . }}-sensu-ui
+  labels:
+    {{- include "sensu.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "sensu.selectorLabels" . | nindent 4 }}
+    app: sensu-ui
+  type: {{ .Values.service.type }}
+  ports:
+  - name: sensu-webui
+    protocol: TCP
+    port: 3000
+    targetPort: 3000
+{{ if (and (eq .Values.ui.service.type "NodePort") (not (empty .Values.ui.service.nodePort))) }}
+    nodePort: {{.Values.ui.service.nodePort}}
+{{ end }}

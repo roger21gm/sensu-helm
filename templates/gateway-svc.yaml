@@ -26,10 +26,3 @@ spec:
 {{ if (and (eq .Values.transport.service.type "NodePort") (not (empty .Values.transport.service.nodePort))) }}
     nodePort: {{.Values.transport.service.nodePort}}
 {{ end }}
-  - name: sensu-webui
-    protocol: TCP
-    port: 80
-    targetPort: 3000
-{{ if (and (eq .Values.web.service.type "NodePort") (not (empty .Values.web.service.nodePort))) }}
-    nodePort: {{.Values.web.service.nodePort}}
-{{ end }}

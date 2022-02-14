@@ -30,11 +30,11 @@ spec:
         ]
         env:
         - name: ETCD_SVC
-          value: {{ include "sensu.fullname" . }}-etcd-headless
+          value: {{ .Release.Name }}-etcd
         - name: SENSU_BACKEND_CLUSTER_ADMIN_USERNAME
-          value: sensu
+          value: {{ default "sensu" .Values.sensu.user }}
         - name: SENSU_BACKEND_CLUSTER_ADMIN_PASSWORD
-          value: sensu
+          value: {{ default "sensu" .Values.sensu.password }}
         volumeMounts: []
         ports: []
       restartPolicy: Never

@@ -10,9 +10,7 @@ storageClass: default
 gateway:
   image:
     repository: nginx
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: latest
+    tag: 1.21
 
 sensu:
   image:
@@ -36,9 +34,22 @@ ui:
   image:
     repository: roger21gm/sensu-go-ui
     tag: latest
-    
+
 service:
   type: NodePort
   nodePort: 30333
+
+etcd:
+  global:
+    storageClass: default
+  persistence:
+    size: 8Gi
+  autoCompactionMode: "revision"
+  autoCompactionRetention: 2
+  auth:
+    rbac:
+      create: false
+    
+
 
 
